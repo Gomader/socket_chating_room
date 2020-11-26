@@ -6,11 +6,19 @@ def tcplinks(sock,addr):
     while True:
         try:
             data = sock.recv(1024).decode()
-            id = data.split(' ')[0]
-            clients[id].send((addr[0]+" "+data).encode())
+            for client in clients:
+                if addr[0] == client:
+                    continue
+                else:
+                    client[0].send(client[1]+" :\n"+data.encode())
         except:
             sock.shutdown(2)
             clients[addr[0]] = 0
+            logstatus(clients[addr[0]][1]+"离开了")
+
+def logstatus(text):
+    for client in clients:
+        client[0].send("state "+text.encode())
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -18,15 +26,16 @@ if __name__ == "__main__":
         sys.exit()
 
     clients=dict()
-    
-    addr = (sys.argv[2],sys.argv[3])
+    addr = (sys.argv[1],int(sys.argv[2]))
     tcp = socket(AF_INET,SOCK_STREAM)
     tcp.bind(addr)
 
     tcp.listen(100)
-
     while True:
         client,addr = tcp.accept()
-        clients[addr[0]] = [client,1]
+        name = client.recv(1024).decode()
+        clients[addr[0]] = [client,name,1]
         t = threading.Thread(target=tcplinks,args=(client,addr))
         t.start()
+        print(addr)
+        logstatus(name+"进入聊天室")
