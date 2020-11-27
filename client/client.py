@@ -68,7 +68,7 @@ class chatting:
         message = self.inputText.get('1.0',tk.END)
         self.chatText.insert(tk.END,now)
         self.chatText.insert(tk.END,message)
-        self.tcp.send(self.name+":"+message.encode())
+        self.tcp.send((self.name+":"+message).encode())
     
     def sendfile(self):
         filename = tk.filedialog.askopenfilename(title="选择文件")
@@ -82,7 +82,8 @@ class chatting:
         tcp.send("finished".encode())
         f.close()
     def insertTothread(self):
-        threading.Thread(target=self.recveiveMessage)
+        t = threading.Thread(target=self.recveiveMessage)
+        t.start()
         
 
 if __name__ == "__main__":

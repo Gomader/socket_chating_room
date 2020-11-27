@@ -18,7 +18,7 @@ def tcplinks(sock,addr):
 
 def logstatus(text):
     for client in clients:
-        client[0].send("state "+text.encode())
+        clients[client][0].send(text.encode())
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
