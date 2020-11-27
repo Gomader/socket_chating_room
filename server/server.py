@@ -6,6 +6,10 @@ def tcplinks(sock,addr):
     while True:
         try:
             data = sock.recv(1024).decode()
+            if not data:
+                sock.shutdown(2)
+                clients[addr[0]] = 0
+                logstatus(clients[addr[0]][1]+"离开了")
             for client in clients:
                 if addr[0] == client:
                     continue
@@ -44,5 +48,4 @@ if __name__ == "__main__":
         clients[addr[0]] = [client,name,1]
         t = threading.Thread(target=tcplinks,args=(client,addr))
         t.start()
-        print(addr)
         logstatus(name+"进入聊天室")
