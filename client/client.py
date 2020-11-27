@@ -52,7 +52,7 @@ class chatting:
                 f = open(filename,'w')
                 f.close()
                 while True:
-                    data = self.tcp.recv(1024).decode()
+                    data = self.tcp.recv(1024)
                     if data == "finished":
                         break
                     f = open(filename,'ab')
