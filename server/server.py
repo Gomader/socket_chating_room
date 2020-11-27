@@ -10,18 +10,21 @@ def tcplinks(sock,addr):
                 sock.shutdown(2)
                 clients[addr[0]] = 0
                 logstatus(clients[addr[0]][1]+"离开了")
-            for client in clients:
-                if addr[0] == client:
-                    continue
-                else:
-                    if data == "file":
-                        while True:
-                            data = sock.recv(1024).decode()
-                            if data == "finished":
-                                break
-                            clients[client][0].send(data.encode())
+            if data == "file":
+                for client in clients.keys():
+                    if addr[0] == client:
+                        continue
                     else:
-                        clients[client][0].send(client[1]+" : "+data.encode())
+                        clients[client][0].send("file".encode())
+                while True:
+                    data = sock.recv(1024).decode()
+                    for client in clients:
+                        if addr[0] == client:
+                            continue
+                        else:
+                            clients[client][0].send(data.encode())
+            else:
+                clients[client][0].send((clients[client][1]+" : "+data).encode())
         except:
             sock.shutdown(2)
             clients[addr[0]] = 0
