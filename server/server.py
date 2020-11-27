@@ -3,6 +3,7 @@ import tkinter,sys,threading
 
 
 def tcplinks(sock,addr):
+    global clients
     while True:
         try:
             data = sock.recv(1024).decode()
@@ -31,8 +32,7 @@ def tcplinks(sock,addr):
                     clients[client][0].send(data.encode())
         except:
             sock.shutdown(2)
-            clients[addr[0]] = 0
-            print(clients[addr[0]])
+            clients[addr[0]][2] = 0
             logstatus(clients[addr[0]][1]+"离开了")
             break
 
