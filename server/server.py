@@ -24,7 +24,10 @@ def tcplinks(sock,addr):
                         else:
                             clients[client][0].send(data.encode())
             else:
-                clients[client][0].send((clients[client][1]+" : "+data).encode())
+                for client in clients:
+                    if addr[0] == client:
+                            continue
+                    clients[client][0].send((clients[client][1]+" : "+data).encode())
         except:
             sock.shutdown(2)
             clients[addr[0]] = 0
