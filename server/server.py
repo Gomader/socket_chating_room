@@ -10,7 +10,14 @@ def tcplinks(sock,addr):
                 if addr[0] == client:
                     continue
                 else:
-                    client[0].send(client[1]+" :\n"+data.encode())
+                    if data == "file":
+                        while True:
+                            data = sock.recv(1024).decode()
+                            if data == "finished":
+                                break
+                            clients[client][0].send(data.encode())
+                    else:
+                        clients[client][0].send(client[1]+" : "+data.encode())
         except:
             sock.shutdown(2)
             clients[addr[0]] = 0
